@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-harp.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <script type="text/javascript" charset="utf-8" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" ></script>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+  </head>
+  <body>
+    <div style="width: 1000px; height: 500px" id="mapContainer"></div>
+    <script>
+	// https://www.here.com/docs/bundle/raster-tile-api-developer-guide/page/topics/examples/example-jsapi.html
+	
+
+		
+		
+		// Initiate and authenticate your connection to the HERE platform:
+		const platform = new H.service.Platform({
+			'apikey': 'be12u1wpXFZzcD4CDbRNhKP6FYGubmuITosrcKpeuZg'
+		});
+
+		// Initialize the engine type:
+		const engineType = H.Map.EngineType['HARP'];
+
+		// Obtain the default map types from the platform object:
+		const defaultLayers = platform.createDefaultLayers({
+			engineType: engineType
+		});
+
+		// Instantiate (and display) a map:
+		const map = new H.Map(
+			document.getElementById("mapContainer"),
+			defaultLayers.hybrid.day.raster, {
+				engineType: engineType,
+				zoom: 14,
+				pixelRatio: 2,
+				center: {
+						lat: 45.1482,
+						lng: 9.9402
+					}
+			});
+
+		map.addLayer(defaultLayers.hybrid.day.vector);
+
+		// MapEvents enables the event system.
+		// The behavior variable implements default interactions for pan/zoom (also on mobile touch environments).
+		const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+		// Enable dynamic resizing of the map, based on the current size of the enclosing cntainer
+		window.addEventListener('resize', () => map.getViewPort().resize());
+
+		// Create the default UI:
+		const ui = H.ui.UI.createDefault(map, defaultLayers)
+
+		// Create an info bubble with the HTML content
+		const coords = { lat: 45.5048, lng: -73.5870 };
+		const infoBubble = new H.ui.InfoBubble(coords, {
+			content: '<b>Mount Royal</b><br>A hill in Montreal with stunning city views'
+		});
+
+		ui.addBubble(infoBubble);	
+		
+    
+    </script>
+  </body>
+</html>
